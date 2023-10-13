@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/enterActivity">
+
+    <fragment
+        android:id="@+id/enterActivity"
+        android:name="com.angi_sh.secondapp.EnterActivity"
+        android:label="fragment_enter_activity"
+        tools:layout="@layout/fragment_enter_activity" >
+        <action
+            android:id="@+id/action_enterActivity_to_userDataActivity"
+            app:destination="@id/userDataActivity" />
+        <action
+            android:id="@+id/action_enterActivity_to_rate"
+            app:destination="@id/rate" />
+    </fragment>
+    <fragment
+        android:id="@+id/userDataActivity"
+        android:name="com.angi_sh.secondapp.UserDataActivity"
+        android:label="UserDataActivity" >
+        <action
+            android:id="@+id/action_userDataActivity_to_enterActivity"
+            app:destination="@id/enterActivity" />
+        <action
+            android:id="@+id/action_userDataActivity_to_useCamera"
+            app:destination="@id/useCamera" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/useCamera"
+        android:name="com.angi_sh.secondapp.UseCamera"
+        android:label="fragment_use_camera"
+        tools:layout="@layout/fragment_use_camera" >
+        <action
+            android:id="@+id/action_useCamera_to_listView"
+            app:destination="@id/listView" />
+    </fragment>
+    <fragment
+        android:id="@+id/listView"
+        android:name="com.angi_sh.secondapp.ListView"
+        android:label="fragment_list_view"
+        tools:layout="@layout/fragment_list_view" />
+    <fragment
+        android:id="@+id/rate"
+        android:name="com.angi_sh.secondapp.Rate"
+        android:label="fragment_rate"
+        tools:layout="@layout/fragment_rate" />
+</navigation>
