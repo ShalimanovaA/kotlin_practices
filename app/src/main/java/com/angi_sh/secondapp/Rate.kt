@@ -5,6 +5,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.asLiveData
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.angi_sh.secondapp.databinding.FragmentRateBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -45,25 +48,46 @@ class Rate : Fragment() {
         val rates = retrofit.create(RateApi::class.java)
         // создание объекта базы данных
         val db = MainDb.getDB(this)
+
+
         binding.update.setOnClickListener{
             CoroutineScope(Dispatchers.IO).launch {
                 val all_rates = rates.getRateById().rates
-                val i = 0
                 for ((s, d) in all_rates){
                     val item = RateEntity(s,d)
-                    System.out.println(item)
                     db.getDao().insertItem(item)
-
                 }
-//                val al = db.getDao().getAllItems()
-//                System.out.println(al)
             }
         }
+
         return binding.root
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val db = MainDb.getDB(this)
+
+        //представление данных
+        val recyclerView: RecyclerView = binding.list
+        val data = mutableListOf<String>()
+
+        //получение списка из бд
+        db.getDao().getAllItems().asLiveData().observe(this){ list->
+            var i=1
+            list.forEach{
+                val t = "${i}) ${it.id} Rate: ${1/(it.rate)}\n"
+                i+=1
+                data.add(t)
+            }
+            //отразить изменения на экране
+            val adapter = MyAdapter(data)
+            recyclerView.adapter = adapter
+            recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        }
+//        //отразить изменения на экране
+//        val adapter = MyAdapter(data)
+//        recyclerView.adapter = adapter
+//        recyclerView.layoutManager = LinearLayoutManager(requireContext())
     }
 
 }

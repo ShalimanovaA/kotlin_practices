@@ -10,7 +10,6 @@ import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.angi_sh.secondapp.databinding.FragmentListViewBinding
-import com.angi_sh.secondapp.databinding.FragmentUseCameraBinding
 import java.io.BufferedReader
 import java.io.File
 import java.io.FileInputStream
