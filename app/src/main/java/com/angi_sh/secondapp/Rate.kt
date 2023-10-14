@@ -15,8 +15,11 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class Rate : Fragment() {
-
     private lateinit var binding: FragmentRateBinding
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -33,29 +36,34 @@ class Rate : Fragment() {
             .addInterceptor(interceptor)
             .build()
 
+
         // инициализируем retrofit
         val retrofit = Retrofit.Builder()
-            .baseUrl("https://www.cbr-xml-daily.ru/")
-            .addConverterFactory(GsonConverterFactory.create()).client(client) //json converter
+            .baseUrl("https://www.cbr-xml-daily.ru/").client(client)
+            .addConverterFactory(GsonConverterFactory.create()) //json converter
             .build()
         val rates = retrofit.create(RateApi::class.java)
-//        val db = MainDb.getDB(this)
-            binding.update.setOnClickListener{
-                CoroutineScope(Dispatchers.IO).launch {
-                    val all_rates = rates.getRateById().rates
-                    val i = 0
-                    System.out.println(all_rates)
-//                    for ((s, d) in all_rates){
-//                        System.out.println(s)
-//                    }
-//                        
-                    }
+        // создание объекта базы данных
+        val db = MainDb.getDB(this)
+        binding.update.setOnClickListener{
+            CoroutineScope(Dispatchers.IO).launch {
+                val all_rates = rates.getRateById().rates
+                val i = 0
+                for ((s, d) in all_rates){
+                    val item = RateEntity(s,d)
+                    System.out.println(item)
+                    db.getDao().insertItem(item)
 
                 }
+//                val al = db.getDao().getAllItems()
+//                System.out.println(al)
+            }
+        }
         return binding.root
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
     }
+
 }
